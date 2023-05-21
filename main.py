@@ -39,7 +39,7 @@ def upload_random_xkcd_comics_to_vk(my_token, vk_community_id):
     comics_name = download_random_comics()
     print(f"comics download with file path : {comics_name}")
     vk_api.add_image_to_community(my_token, vk_community_id, comics_name)
-    os.remove(comics_name)
+    return comics_name
 
 
 if __name__ == '__main__':
@@ -47,4 +47,5 @@ if __name__ == '__main__':
     vk_token = os.getenv('VK_TOKEN')
     vk_community_id = os.getenv('VK_COMMUNITY_ID')
 
-    upload_random_xkcd_comics_to_vk(vk_token, vk_community_id)
+    comics_name = upload_random_xkcd_comics_to_vk(vk_token, vk_community_id)
+    os.remove(comics_name)
