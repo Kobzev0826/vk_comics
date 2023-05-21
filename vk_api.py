@@ -1,5 +1,4 @@
 import requests, os
-from dotenv import load_dotenv
 
 
 def get_upload_url(vk_community_id, access_token):
@@ -20,7 +19,6 @@ def upload_photo(photo_path, access_token, vk_community_id):
 
 
 def saveWallPhoto(access_token, vk_community_id, uploaded_photo):
-    # Save uploaded photo to VK
     save_url = f'https://api.vk.com/method/photos.saveWallPhoto'
     params = {
         'access_token': access_token,
@@ -33,7 +31,6 @@ def saveWallPhoto(access_token, vk_community_id, uploaded_photo):
     save_response = requests.get(save_url, params=params)
     saved_photo = save_response.json()['response'][0]
 
-    # Post the image to your community
     post_url = f'https://api.vk.com/method/wall.post'
     post_data = {
         'access_token': access_token,
