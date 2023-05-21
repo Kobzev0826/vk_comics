@@ -46,6 +46,7 @@ if __name__ == '__main__':
     load_dotenv()
     vk_token = os.getenv('VK_TOKEN')
     vk_community_id = os.getenv('VK_COMMUNITY_ID')
-
-    comics_name = upload_random_xkcd_comics_to_vk(vk_token, vk_community_id)
-    os.remove(comics_name)
+    try:
+        comics_name = upload_random_xkcd_comics_to_vk(vk_token, vk_community_id)
+    finally:
+        os.remove(comics_name)
