@@ -2,18 +2,6 @@ import requests, os
 from dotenv import load_dotenv
 
 
-def get_my_avaliable_groups(token):
-    params = {
-        'access_token': token,
-        'v': 5.131,
-        'extended': 1,
-        'fields': ['name']
-    }
-    response = requests.get('https://api.vk.com/method/groups.get', params=params)
-    response.raise_for_status()
-    return response.json()
-
-
 def get_upload_url(vk_community_id, access_token):
     upload_url = f'https://api.vk.com/method/photos.getWallUploadServer?group_id={vk_community_id}&access_token={access_token}&v=5.131'
     upload_response = requests.get(upload_url)
@@ -21,7 +9,7 @@ def get_upload_url(vk_community_id, access_token):
     return upload_response.json()['response']
 
 
-def upload_photo(photo_path, access_token,vk_community_id):
+def upload_photo(photo_path, access_token, vk_community_id):
     with open(photo_path, 'rb') as file:
         files = {'photo': file}
         upload_server = get_upload_url(vk_community_id, access_token)['upload_url']
@@ -47,25 +35,16 @@ def saveWallPhoto(access_token, vk_community_id, uploaded_photo):
 
     # Post the image to your community
     post_url = f'https://api.vk.com/method/wall.post'
-    post_data={
-        'access_token' : access_token,
-        'v':5.131,
-        'owner_id' : f"-{vk_community_id}",
-        'attachments' : f'photo{saved_photo["owner_id"]}_{saved_photo["id"]}'
+    post_data = {
+        'access_token': access_token,
+        'v': 5.131,
+        'owner_id': f"-{vk_community_id}",
+        'attachments': f'photo{saved_photo["owner_id"]}_{saved_photo["id"]}'
     }
     response = requests.post(post_url, data=post_data)
     response.raise_for_status()
 
 
 def add_image_to_community(access_token, vk_community_id, photo_path):
-    uploaded_photo = upload_photo(photo_path, access_token,vk_community_id)
-    saveWallPhoto(access_token,vk_community_id,uploaded_photo)
-
-
-if __name__ == '__main__':
-    load_dotenv()
-    my_token = os.getenv('VK_TOKEN')
-    vk_community_id = os.getenv('VK_COMMUNITY_ID')
-    # my_communities = get_my_avaliable_groups(my_token)
-    # print(my_communities)
-    add_image_to_community(my_token, vk_community_id, 'comics/python.png')
+    uploaded_photo = upload_photo(photo_path, access_token, vk_community_id)
+    saveWallPhoto(access_token, vk_community_id, uploaded_photo)
