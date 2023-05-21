@@ -2,8 +2,13 @@ import requests, os
 
 
 def get_upload_url(vk_community_id, access_token):
-    upload_url = f'https://api.vk.com/method/photos.getWallUploadServer?group_id={vk_community_id}&access_token={access_token}&v=5.131'
-    upload_response = requests.get(upload_url)
+    upload_url = f'https://api.vk.com/method/photos.getWallUploadServer'
+    params = {
+        'group_id': vk_community_id,
+        'access_token': access_token,
+        'v': 5.131
+    }
+    upload_response = requests.get(upload_url, params=params)
     upload_response.raise_for_status()
     return upload_response.json()['response']
 
@@ -11,10 +16,10 @@ def get_upload_url(vk_community_id, access_token):
 def upload_photo(photo_path, access_token, vk_community_id):
     with open(photo_path, 'rb') as file:
         files = {'photo': file}
-        upload_server = get_upload_url(vk_community_id, access_token)['upload_url']
-        upload_response = requests.post(upload_server, files=files)
-        upload_response.raise_for_status()
-        uploaded_photo = upload_response.json()
+        upload_url = get_upload_url(vk_community_id, access_token)['upload_url']
+        upload_response = requests.post(upload_url, files=files)
+    upload_response.raise_for_status()
+    uploaded_photo = upload_response.json()
     return uploaded_photo
 
 
