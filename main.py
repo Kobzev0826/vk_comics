@@ -44,7 +44,7 @@ def upload_random_xkcd_comics_to_vk(my_token, vk_community_id):
 
 if __name__ == '__main__':
     load_dotenv()
-    my_token = os.getenv('VK_TOKEN')
+    vk_token = os.getenv('VK_TOKEN')
     vk_community_id = os.getenv('VK_COMMUNITY_ID')
 
-    upload_random_xkcd_comics_to_vk(my_token,vk_community_id)
+    upload_random_xkcd_comics_to_vk(vk_token, vk_community_id)
