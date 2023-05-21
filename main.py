@@ -37,7 +37,6 @@ def download_random_comics():
 
 def upload_random_xkcd_comics_to_vk(my_token, vk_community_id):
     comics_name = download_random_comics()
-    print(f"comics download with file path : {comics_name}")
     vk_api.add_image_to_community(my_token, vk_community_id, comics_name)
     return comics_name
 
