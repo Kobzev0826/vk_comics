@@ -29,8 +29,8 @@ def get_max_num_xkcd():
 
 
 def upload_random_xkcd_comics_to_vk(my_token, vk_community_id):
-    right_limit_random = get_max_num_xkcd()
-    rand_num = random.randint(0, right_limit_random)
+    max_num_xkcd_comics = get_max_num_xkcd()
+    rand_num = random.randint(0, max_num_xkcd_comics)
     url = f'https://xkcd.com/{rand_num}/info.0.json'
     image_url = get_comics_info(url)['img']
     comics_name = download_image_tmp(image_url)
