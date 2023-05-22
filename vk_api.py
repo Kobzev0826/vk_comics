@@ -23,7 +23,7 @@ def upload_photo(photo_path, access_token, vk_community_id):
     return uploaded_photo
 
 
-def post_wall_photo(access_token, vk_community_id, photo, server,hash ):
+def post_wall_photo(access_token, vk_community_id, photo, server,hash_photo ):
     save_url = f'https://api.vk.com/method/photos.saveWallPhoto'
     params = {
         'access_token': access_token,
@@ -31,7 +31,7 @@ def post_wall_photo(access_token, vk_community_id, photo, server,hash ):
         'group_id': vk_community_id,
         'photo': photo,
         'server': server,
-        'hash': hash
+        'hash': hash_photo
     }
     save_response = requests.get(save_url, params=params)
     saved_photo = save_response.json()['response'][0]
@@ -48,5 +48,5 @@ def post_wall_photo(access_token, vk_community_id, photo, server,hash ):
 
 
 def add_image_to_community(access_token, vk_community_id, photo_path):
-    photo, server,hash = upload_photo(photo_path, access_token, vk_community_id)
-    post_wall_photo(access_token, vk_community_id, photo, server,hash)
+    photo, server, hash_photo = upload_photo(photo_path, access_token, vk_community_id)
+    post_wall_photo(access_token, vk_community_id, photo, server,hash_photo)
