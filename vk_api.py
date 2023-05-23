@@ -1,4 +1,13 @@
-import requests, os
+import requests, os, sys
+
+
+def raise_vk_response(response):
+    try:
+        error = response['error']
+        sys.stderr.write(f"ERROR: {error['error_msg']}")
+        sys.exit()
+    except KeyError:
+        return
 
 
 def get_upload_url(vk_community_id, access_token):
@@ -10,7 +19,10 @@ def get_upload_url(vk_community_id, access_token):
     }
     upload_response = requests.get(upload_url, params=params)
     upload_response.raise_for_status()
-    return upload_response.json()['response']
+    response_json = upload_response.json()
+    raise_vk_response(response_json)
+
+    return response_json['response']
 
 
 def upload_photo(photo_path, access_token, vk_community_id):
@@ -20,10 +32,11 @@ def upload_photo(photo_path, access_token, vk_community_id):
         upload_response = requests.post(upload_url, files=files)
     upload_response.raise_for_status()
     uploaded_photo = upload_response.json()
+    raise_vk_response(uploaded_photo)
     return uploaded_photo
 
 
-def post_wall_photo(access_token, vk_community_id, photo, server,hash_photo ):
+def post_wall_photo(access_token, vk_community_id, photo, server, hash_photo, caption=""):
     save_url = f'https://api.vk.com/method/photos.saveWallPhoto'
     params = {
         'access_token': access_token,
@@ -31,10 +44,15 @@ def post_wall_photo(access_token, vk_community_id, photo, server,hash_photo ):
         'group_id': vk_community_id,
         'photo': photo,
         'server': server,
-        'hash': hash_photo
+        'hash': hash_photo,
+        'caption': caption
     }
     save_response = requests.get(save_url, params=params)
-    saved_photo = save_response.json()['response'][0]
+    save_response.raise_for_status()
+
+    uploaded_photo = save_response.json()
+    raise_vk_response(uploaded_photo)
+    saved_photo = uploaded_photo['response'][0]
 
     post_url = f'https://api.vk.com/method/wall.post'
     post_data = {
@@ -45,8 +63,9 @@ def post_wall_photo(access_token, vk_community_id, photo, server,hash_photo ):
     }
     response = requests.post(post_url, data=post_data)
     response.raise_for_status()
+    raise_vk_response(response.json())
 
 
-def add_image_to_community(access_token, vk_community_id, photo_path):
+def add_image_to_community(access_token, vk_community_id, photo_path, caption=''):
     photo, server, hash_photo = upload_photo(photo_path, access_token, vk_community_id)
-    post_wall_photo(access_token, vk_community_id, photo, server,hash_photo)
+    post_wall_photo(access_token, vk_community_id, photo, server, hash_photo,caption)

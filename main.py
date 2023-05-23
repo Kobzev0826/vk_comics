@@ -32,10 +32,10 @@ def upload_random_xkcd_comics_to_vk(my_token, vk_community_id):
     max_num_xkcd_comics = get_max_num_xkcd()
     rand_num = random.randint(0, max_num_xkcd_comics)
     url = f'https://xkcd.com/{rand_num}/info.0.json'
-    image_url = get_comics_info(url)['img']
-    comics_name = download_image_tmp(image_url)
-    vk_api.add_image_to_community(my_token, vk_community_id, comics_name)
-    return comics_name
+    comics_info = get_comics_info(url)
+    comics_path = download_image_tmp(comics_info['img'])
+    vk_api.add_image_to_community(my_token, vk_community_id, comics_path, comics_info['alt'])
+    return comics_path
 
 
 if __name__ == '__main__':
@@ -43,6 +43,6 @@ if __name__ == '__main__':
     vk_token = os.environ['VK_TOKEN']
     vk_community_id = os.environ['VK_COMMUNITY_ID']
     try:
-        comics_name = upload_random_xkcd_comics_to_vk(vk_token, vk_community_id)
+        comics_path = upload_random_xkcd_comics_to_vk(vk_token, vk_community_id)
     finally:
-        os.remove(comics_name)
+        os.remove(comics_path)
