@@ -19,10 +19,10 @@ def get_upload_url(vk_community_id, access_token):
     }
     upload_response = requests.get(upload_url, params=params)
     upload_response.raise_for_status()
-    response_json = upload_response.json()
-    raise_vk_response(response_json)
+    upload_dict = upload_response.json()
+    raise_vk_response(upload_dict)
 
-    return response_json['response']
+    return upload_dict['response']
 
 
 def upload_photo(photo_path, access_token, vk_community_id):
